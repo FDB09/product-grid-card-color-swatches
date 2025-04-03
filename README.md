@@ -1,0 +1,1 @@
+# product-grid-card-color-swatches
