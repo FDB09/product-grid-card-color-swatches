@@ -17,7 +17,7 @@ This feature adds color swatches to product cards in Shopify collections, allowi
 ## File Structure
 
 ```
-.
+theme
 ├── assets
 │   ├── card-product-variant-selection-custom.js
 │   └── component-card-variant-swatch-custom.css
