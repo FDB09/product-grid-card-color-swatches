@@ -1,0 +1,105 @@
+{% comment %}
+  - COLOR SWATCH FEATURE -
+
+  Description:
+  Renders product variant swatch options for collection page based on image URLs.
+  Defaults to buttons if no image URL is present.
+
+  Accepts:
+  - product: {Object} product object.
+  - option: {Object} current product_option object
+
+  Usage:
+  {% render 'variant-swatch-collection',
+    product: product,
+    option: option
+  %}
+{% endcomment %}
+
+{% assign product_form_id = 'product-form-' | append: product.id %}
+
+<div class="collection-product-card__swatch-variants {{ settings.color_swatch_alignment }}">
+  {% for value in option.values %}
+    {% assign variant_image_url = null %}
+    {% assign variant_id = null %}
+    {% assign option_disabled = true %}
+
+    {% # Match Color value with variant %}
+
+    {% for variant in product.variants %}
+      {% if variant.options contains value %}
+        {% assign variant_image_url = variant.featured_media | image_url: '360x360' %}
+        {% assign variant_id = variant.id %}
+        {% if variant.available %}
+          {% assign option_disabled = false %}
+        {% endif %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+
+    {% # Assign Color hex or image by using Shopify's default 'Color' metaobject %}
+
+    {% if variant_image_url %}
+      {% assign swatch_found = false %}
+      {% for entry in metaobjects['shopify--color-pattern'].values %}
+        {% if entry.label == value %}
+          {% if entry.image %}
+            {% assign variant_image_url = entry.image | image_url %}
+            {% assign swatch_found = true %}
+          {% elsif entry.color %}
+            {% assign hex_color = entry.color | replace: '#', '%23' %}
+            {% assign svg = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><rect width="100%" height="100%" fill="'
+              | append: hex_color
+              | append: '" /></svg>'
+            %}
+            {% assign encoded_svg = svg | replace: '"', '%22' | replace: '<', '%3C' | replace: '>', '%3E' %}
+            {% assign variant_image_url = 'data:image/svg+xml;charset=utf-8,' | append: encoded_svg %}
+            {% assign swatch_found = true %}
+          {% endif %}
+          {% if swatch_found %}
+            {% break %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    {%- capture input_id -%}
+      collection-{{ section.id }}-{{ product.id }}-{{ option.position }}-{{ forloop.index0 }}
+    {%- endcapture -%}
+
+    {%- capture input_name -%}
+      collection-{{ section.id }}-{{ product.id }}-{{ option.name }}-{{ option.position }}
+    {%- endcapture -%}
+
+    {%- # Actual swatch element rendering -%}
+    <div class="collection-product-card__swatch">
+      <input
+        type="radio"
+        id="{{ input_id }}"
+        name="{{ input_name }}"
+        value="{{ value | escape }}"
+        form="{{ product_form_id }}"
+        data-section-id="{{ section.id }}"
+        data-product-id="{{ product.id }}"
+        data-variant-id="{{ variant_id }}"
+        data-product-url="{{ product.url }}"
+        data-option-value-id="{{ value.id }}"
+        data-image-url="{{ variant_image_url }}"
+        {% if option.selected_value == value %}
+          checked
+        {% endif %}
+        {% if option_disabled %}
+          class="disabled"
+          disabled
+        {% endif %}
+      >
+      <label
+        for="{{ input_id }}"
+        style="background-image: url('{{ variant_image_url }}');"
+      >
+        <span class="visually-hidden">{{ value | escape }}</span>
+        <span class="visually-hidden">{{ 'products.product.variant_sold_out_or_unavailable' | t }}</span>
+      </label>
+    </div>
+  {% endfor %}
+</div>
