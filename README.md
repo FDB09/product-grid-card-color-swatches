@@ -19,14 +19,15 @@ Improves user experience by allowing variant selection at the collection level.
 
 ## File Structure
 
-config/
-  ├── settings_schema.json
-layout/
-  ├── theme.liquid
-snippets/
-  ├── card-product.liquid
-  ├── card-variant-swatch-custom.liquid
-assets/
-  ├── component-card-variant-swatch-custom.css
-  ├── card-product-variant-selection-custom.js
+.
+├── assets
+│   ├── card-product-variant-selection-custom.js
+│   └── component-card-variant-swatch-custom.css
+├── config
+│   └── settings_schema.json
+├── layout
+│   └── theme.liquid
+└── snippets
+    ├── card-product.liquid
+    └── card-variant-swatch-custom.liquid
 
