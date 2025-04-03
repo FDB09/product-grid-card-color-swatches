@@ -1,12 +1,12 @@
-## Shopify Theme - Color Swatches for Collection Product Cards
+# Shopify Theme - Color Swatches for Collection Product Cards
 
 
-# Overview
+## Overview
 
 This feature adds color swatches to product cards in Shopify collections, allowing users to preview product variants directly from the collection page. The implementation dynamically assigns images or colors based on Shopify's Color metaobject or variant images.
 
 
-# Features
+## Features
 
 Displays variant color swatches on product cards.
 
@@ -17,7 +17,7 @@ Defaults to buttons if no image or color is available.
 Improves user experience by allowing variant selection at the collection level.
 
 
-# File Structure
+## File Structure
 
 .
 ├── assets
